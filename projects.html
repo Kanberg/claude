@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мои проекты - SuperPython</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-icon">🐍</span>
+                <span class="logo-text">SuperPython Editor</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="editor.html">Редактор</a></li>
+                <li><a href="projects.html" class="active">Проекты</a></li>
+                <li><a href="documentation.html">Документация</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="settings.html" class="nav-btn">⚙️</a>
+                <a href="profile.html" class="nav-btn profile-btn">
+                    <span class="avatar" id="userAvatar">?</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="page-container">
+        <div class="page-header">
+            <h1>📁 Мои проекты</h1>
+            <button class="btn btn-primary" onclick="createNewProject()">
+                ➕ Новый проект
+            </button>
+        </div>
+
+        <div class="projects-filters">
+            <input type="text" placeholder="🔍 Поиск проектов..." class="search-input">
+            <select class="filter-select">
+                <option>Все проекты</option>
+                <option>Игры</option>
+                <option>Утилиты</option>
+                <option>Обучение</option>
+            </select>
+            <select class="sort-select">
+                <option>Последние</option>
+                <option>По названию</option>
+                <option>По дате создания</option>
+            </select>
+        </div>
+
+        <div class="projects-grid" id="projectsGrid">
+            <!-- Проекты будут загружены через JS -->
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/storage.js"></script>
+    <script>
+        loadProjects();
+    </script>
+</body>
+</html>
