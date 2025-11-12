@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактор - SuperPython Game Editor</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/editor.css">
+    <link rel="stylesheet" href="css/components.css">
+</head>
+<body class="editor-body">
+    <!-- Верхняя панель -->
+    <header class="editor-header">
+        <div class="header-left">
+            <a href="index.html" class="logo-small">🐍 SuperPython</a>
+            <div class="project-name">
+                <input type="text" id="projectName" value="Моя игра" placeholder="Название проекта">
+            </div>
+        </div>
+        
+        <div class="header-center">
+            <button class="btn btn-success" id="runBtn" onclick="runGame()">
+                ▶️ Запустить
+            </button>
+            <button class="btn btn-warning" id="stopBtn" onclick="stopGame()" disabled>
+                ⏹️ Остановить
+            </button>
+            <button class="btn btn-outline" onclick="debugGame()">
+                🐛 Отладка
+            </button>
+        </div>
+        
+        <div class="header-right">
+            <button class="btn btn-icon" onclick="saveProject()" title="Сохранить (Ctrl+S)">💾</button>
+            <button class="btn btn-icon" onclick="toggleSettings()" title="Настройки">⚙️</button>
+            <button class="btn btn-icon" onclick="toggleFullscreen()" title="Полный экран">⛶</button>
+            <a href="profile.html" class="btn btn-icon">👤</a>
+        </div>
+    </header>
+
+    <!-- Основной контейнер редактора -->
+    <div class="editor-container">
+        <!-- Левая панель - Файлы и ресурсы -->
+        <aside class="sidebar-left">
+            <div class="sidebar-tabs">
+                <button class="sidebar-tab active" data-tab="files">📁 Файлы</button>
+                <button class="sidebar-tab" data-tab="assets">🎨 Ресурсы</button>
+                <button class="sidebar-tab" data-tab="outline">📋 Структура</button>
+            </div>
+            
+            <div class="sidebar-content">
+                <!-- Файлы -->
+                <div class="tab-content active" id="files-tab">
+                    <div class="file-tree">
+                        <div class="file-tree-header">
+                            <span>Мой проект</span>
+                            <button class="btn-small" onclick="createFile()">+ Файл</button>
+                        </div>
+                        <ul class="file-list" id="fileList">
+                            <li class="file-item active" data-file="main.py">
+                                <span class="file-icon">🐍</span>
+                                <span>main.py</span>
+                            </li>
+                            <li class="file-item" data-file="player.py">
+                                <span class="file-icon">🐍</span>
+                                <span>player.py</span>
+                            </li>
+                            <li class="file-item" data-file="enemy.py">
+                                <span class="file-icon">🐍</span>
+                                <span>enemy.py</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="examples-section">
+                        <h4>📚 Шаблоны игр</h4>
+                        <button class="example-btn" onclick="loadTemplate('snake')">
+                            🐍 Snake
+                        </button>
+                        <button class="example-btn" onclick="loadTemplate('platformer')">
+                            🏃 Platformer
+                        </button>
+                        <button class="example-btn" onclick="loadTemplate('shooter')">
+                            🚀 Shooter
+                        </button>
+                        <button class="example-btn" onclick="loadTemplate('puzzle')">
+                            🧩 Puzzle
+                        </button>
+                        <button class="example-btn" onclick="loadTemplate('rpg')">
+                            ⚔️ RPG
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Ресурсы -->
+                <div class="tab-content" id="assets-tab">
+                    <div class="assets-grid">
+                        <div class="asset-item" draggable="true">
+                            <div class="asset-preview">🟦</div>
+                            <span>player.png</span>
+                        </div>
+                        <div class="asset-item" draggable="true">
+                            <div class="asset-preview">🟥</div>
+                            <span>enemy.png</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-outline full-width" onclick="uploadAsset()">
+                        ➕ Добавить ресурс
+                    </button>
+                </div>
+                
+                <!-- Структура кода -->
+                <div class="tab-content" id="outline-tab">
+                    <div class="code-outline">
+                        <div class="outline-item">📦 Классы</div>
+                        <div class="outline-item">⚡ Функции</div>
+                        <div class="outline-item">📌 Переменные</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Центральная панель - Редактор кода -->
+        <main class="editor-main">
+            <div class="editor-tabs">
+                <div class="tab active" data-file="main.py">
+                    <span>main.py</span>
+                    <button class="tab-close">×</button>
+                </div>
+            </div>
+            
+            <div class="code-editor-wrapper">
+                <div class="line-numbers" id="lineNumbers"></div>
+                <textarea 
+                    id="codeEditor" 
+                    class="code-editor" 
+                    spellcheck="false"
+                    placeholder="# Начните писать код здесь..."></textarea>
+            </div>
+            
+            <div class="editor-statusbar">
+                <span>Python 3.11</span>
+                <span>UTF-8</span>
+                <span>Строка <span id="currentLine">1</span>, Столбец <span id="currentCol">1</span></span>
+                <span>Строк: <span id="totalLines">0</span></span>
+            </div>
+        </main>
+
+        <!-- Правая панель - Preview и консоль -->
+        <aside class="sidebar-right">
+            <div class="preview-tabs">
+                <button class="preview-tab active" data-tab="game">🎮 Игра</button>
+                <button class="preview-tab" data-tab="console">💻 Консоль</button>
+                <button class="preview-tab" data-tab="debugger">🐛 Отладчик</button>
+            </div>
+            
+            <div class="preview-content">
+                <!-- Игровое окно -->
+                <div class="preview-panel active" id="game-panel">
+                    <div class="game-container">
+                        <canvas id="gameCanvas" width="800" height="600"></canvas>
+                        <div class="game-overlay" id="gameOverlay">
+                            <div class="game-overlay-content">
+                                <h3>🎮 Нажмите "Запустить" для начала</h3>
+                                <p>Ваша игра появится здесь</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="game-controls">
+                        <div class="game-stats">
+                            <span>FPS: <span id="fps">0</span></span>
+                            <span>Объектов: <span id="objects">0</span></span>
+                        </div>
+                        <div class="game-buttons">
+                            <button class="btn-small" onclick="resetGame()">🔄 Сброс</button>
+                            <button class="btn-small" onclick="screenshotGame()">📷 Скриншот</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Консоль -->
+                <div class="preview-panel" id="console-panel">
+                    <div class="console-output" id="consoleOutput"></div>
+                    <div class="console-input-wrapper">
+                        <input type="text" id="consoleInput" placeholder=">>> Введите команду..." />
+                    </div>
+                </div>
+                
+                <!-- Отладчик -->
+                <div class="preview-panel" id="debugger-panel">
+                    <div class="debugger-content">
+                        <div class="debug-section">
+                            <h4>📌 Переменные</h4>
+                            <div id="debugVariables" class="debug-list"></div>
+                        </div>
+                        <div class="debug-section">
+                            <h4>📍 Точки останова</h4>
+                            <div id="debugBreakpoints" class="debug-list"></div>
+                        </div>
+                        <div class="debug-section">
+                            <h4>📊 Стек вызовов</h4>
+                            <div id="debugStack" class="debug-list"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Модальное окно настроек редактора -->
+    <div class="modal" id="editorSettingsModal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2>⚙️ Настройки редактора</h2>
+                <button class="close-btn" onclick="toggleSettings()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-grid">
+                    <div class="setting-group">
+                        <h3>🎨 Оформление</h3>
+                        <div class="form-group">
+                            <label>Тема редактора</label>
+                            <select id="editorTheme">
+                                <option value="vs-dark">Dark (VS Code)</option>
+                                <option value="monokai">Monokai</option>
+                                <option value="dracula">Dracula</option>
+                                <option value="github-light">GitHub Light</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Размер шрифта</label>
+                            <input type="range" min="10" max="24" value="14" id="fontSize">
+                            <span id="fontSizeValue">14px</span>
+                        </div>
+                        <div class="form-group">
+                            <label>Семейство шрифта</label>
+                            <select id="fontFamily">
+                                <option value="'Consolas', monospace">Consolas</option>
+                                <option value="'Fira Code', monospace">Fira Code</option>
+                                <option value="'Monaco', monospace">Monaco</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="setting-group">
+                        <h3>⚡ Поведение</h3>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="autoSave" checked>
+                                Автосохранение
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="livePreview">
+                                Live Preview (автозапуск)
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="autoComplete" checked>
+                                Автодополнение
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="lineNumbers" checked>
+                                Номера строк
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="setting-group">
+                        <h3>🎮 Игровой движок</h3>
+                        <div class="form-group">
+                            <label>Целевой FPS</label>
+                            <select id="targetFPS">
+                                <option value="30">30 FPS</option>
+                                <option value="60" selected>60 FPS</option>
+                                <option value="120">120 FPS</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Разрешение canvas</label>
+                            <select id="canvasResolution">
+                                <option value="800x600" selected>800x600</option>
+                                <option value="1024x768">1024x768</option>
+                                <option value="1280x720">1280x720</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="showHitboxes">
+                                Показывать hitbox'ы
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="saveEditorSettings()">💾 Сохранить</button>
+                <button class="btn btn-outline" onclick="toggleSettings()">Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/storage.js"></script>
+    <script src="js/python-interpreter.js"></script>
+    <script src="js/game-engine.js"></script>
+    <script src="js/editor.js"></script>
+</body>
+</html>
