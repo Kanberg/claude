@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SuperPython Game Editor - Главная</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+    <!-- Навигация -->
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-icon">🐍</span>
+                <span class="logo-text">SuperPython Editor</span>
+                <span class="beta-badge">PRO</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="active">Главная</a></li>
+                <li><a href="editor.html">Редактор</a></li>
+                <li><a href="projects.html">Проекты</a></li>
+                <li><a href="documentation.html">Документация</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="settings.html" class="nav-btn">⚙️ Настройки</a>
+                <a href="profile.html" class="nav-btn profile-btn">
+                    <span class="avatar" id="userAvatar">?</span>
+                    <span id="userName">Гость</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Герой-секция -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <span class="gradient-text">Создавайте игры</span>
+                <br>на Python прямо в браузере
+            </h1>
+            <p class="hero-description">
+                Профессиональный редактор с поддержкой графики, анимации и игровых механик.
+                Пишите код и мгновенно видите результат!
+            </p>
+            <div class="hero-buttons">
+                <a href="editor.html" class="btn btn-primary btn-large">
+                    🚀 Начать создавать
+                </a>
+                <a href="documentation.html" class="btn btn-outline btn-large">
+                    📚 Документация
+                </a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <div class="stat-number">1000+</div>
+                    <div class="stat-label">Пользователей</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">500+</div>
+                    <div class="stat-label">Проектов</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Примеров игр</div>
+                </div>
+            </div>
+        </div>
+        <div class="hero-image">
+            <div class="code-preview">
+                <div class="code-preview-header">
+                    <span class="dot dot-red"></span>
+                    <span class="dot dot-yellow"></span>
+                    <span class="dot dot-green"></span>
+                    <span class="code-preview-title">game.py</span>
+                </div>
+                <pre class="code-preview-content"><span class="comment"># Создаём игру Snake</span>
+<span class="keyword">import</span> game
+
+player = game.Snake(<span class="number">400</span>, <span class="number">300</span>)
+food = game.Food()
+
+<span class="keyword">while</span> game.running:
+    player.move()
+    <span class="keyword">if</span> player.eat(food):
+        player.grow()
+        food.respawn()
+    
+    game.draw(player, food)
+    game.update()</pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- Возможности -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">🎯 Возможности</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎮</div>
+                    <h3>Игровой движок</h3>
+                    <p>Встроенный движок для создания 2D игр с физикой, коллизиями и анимацией</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Live Preview</h3>
+                    <p>Мгновенное отображение результата. Видите игру в реальном времени</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Графический редактор</h3>
+                    <p>Рисуйте спрайты и анимации прямо в редакторе</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💾</div>
+                    <h3>Облачное хранилище</h3>
+                    <p>Сохраняйте проекты и работайте с любого устройства</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔧</div>
+                    <h3>Отладчик</h3>
+                    <p>Встроенный дебаггер с точками останова и инспектором</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <h3>Публикация</h3>
+                    <p>Публикуйте игры одним кликом и делитесь с друзьями</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Примеры игр -->
+    <section class="games-showcase">
+        <div class="container">
+            <h2 class="section-title">🎲 Примеры игр</h2>
+            <div class="games-grid">
+                <div class="game-card" onclick="loadGame('snake')">
+                    <div class="game-preview">🐍</div>
+                    <h3>Snake</h3>
+                    <p>Классическая змейка</p>
+                    <span class="game-tag">Аркада</span>
+                </div>
+                <div class="game-card" onclick="loadGame('pong')">
+                    <div class="game-preview">🏓</div>
+                    <h3>Pong</h3>
+                    <p>Ретро пинг-понг</p>
+                    <span class="game-tag">Спорт</span>
+                </div>
+                <div class="game-card" onclick="loadGame('platformer')">
+                    <div class="game-preview">🏃</div>
+                    <h3>Platformer</h3>
+                    <p>2D платформер</p>
+                    <span class="game-tag">Приключения</span>
+                </div>
+                <div class="game-card" onclick="loadGame('shooter')">
+                    <div class="game-preview">🚀</div>
+                    <h3>Space Shooter</h3>
+                    <p>Космический шутер</p>
+                    <span class="game-tag">Экшен</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Футер -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>SuperPython Editor</h4>
+                    <p>Профессиональный редактор для создания игр на Python</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Ссылки</h4>
+                    <ul>
+                        <li><a href="documentation.html">Документация</a></li>
+                        <li><a href="editor.html">Редактор</a></li>
+                        <li><a href="projects.html">Проекты</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Сообщество</h4>
+                    <ul>
+                        <li><a href="#">GitHub</a></li>
+                        <li><a href="#">Discord</a></li>
+                        <li><a href="#">Форум</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 SuperPython Editor. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        function loadGame(gameType) {
+            localStorage.setItem('loadGame', gameType);
+            window.location.href = 'editor.html';
+        }
+    </script>
+</body>
+</html>
